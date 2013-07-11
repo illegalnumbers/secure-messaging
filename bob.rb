@@ -1,6 +1,5 @@
 require 'socket'
 require 'openssl'
-
 hostname = 'lab1-16.eng.utah.edu'
 port = 9090
 
@@ -31,13 +30,10 @@ open 'certificate.pem', 'w' do |io| io.write cert.to_pem end
 
 loop {
 	client = s.accept
-	client.puts(Time.now.ctime)
-	client.puts "Now you die, connection."
-	client.close
-}
 
-#assuming you now have the symmetric key from alice in cipher
-#and the encodedCipherText
-cipher.decrypt
-plaintext = cipher.update(encodedCipherText)
-plaintext << cipher.final
+	pubkey = IO.read('public_key.pem')
+	s.puts pubkey	
+
+	certFile = IO.read('certificate.pem')
+	s.puts certFile
+}
