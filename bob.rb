@@ -33,8 +33,9 @@ loop {
 
 	pubkey = IO.read('public_key.pem')
 	puts pubkey
-	s.puts pubkey	
+	client.puts pubkey	
 
 	certFile = IO.read('certificate.pem')
-	s.puts certFile
+	puts certFile
+	client.puts certFile
 }
