@@ -32,6 +32,7 @@ loop {
 	client = s.accept
 
 	pubkey = IO.read('public_key.pem')
+	puts pubkey
 	s.puts pubkey	
 
 	certFile = IO.read('certificate.pem')
