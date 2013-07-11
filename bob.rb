@@ -38,4 +38,6 @@ loop {
 	certFile = IO.read('certificate.pem')
 	puts certFile
 	client.puts certFile
+
+	client.close
 }
