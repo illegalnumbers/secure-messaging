@@ -1,0 +1,9 @@
+message
+- encrypt with symetric key
+- encrypt symetric key with public key
+-send this package to bob
+
+hash message with sha-1 and sign with private key (this is the message digest)
+-concatenate the original message with the signature to create the package
+
+reverse is to apply public key to the message digest and compare with hash of message to see if correct
