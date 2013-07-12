@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'socket'
 require 'openssl'
 require 'json'
@@ -8,10 +9,6 @@ s = TCPServer.open(port)
 
 #make new private / public rsa key-pair
 rsakey = OpenSSL::PKey::RSA.new 2048
-
-#write key-pair to disk
-open 'bob_private_key.pem', 'w' do |io| io.write rsakey.to_pem end
-open 'bob_public_key.pem', 'w' do |io| io.write rsakey.public_key.to_pem end
 
 #hash the key using sha1
 sha1 = OpenSSL::Digest::SHA1.new
