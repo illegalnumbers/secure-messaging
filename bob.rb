@@ -18,7 +18,7 @@ sha1 = OpenSSL::Digest::SHA1.new
 digest = sha1.digest(rsakey.public_key.to_pem)
 
 pubkey = JSON.generate({
-	key: rsakey.public_key.to_pem
+	key: rsakey.public_key.to_pem,
 	digest: digest
 	})
 
@@ -50,5 +50,6 @@ loop {
 	digest = sha1.digest(package['data'])
 	throw 'failed digest' unless digest == decrypted_digest
 
+	puts package['data']
 	client.close
 }
