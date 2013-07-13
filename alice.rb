@@ -24,7 +24,6 @@ to_bob_public = JSON.generate({
 puts "sending the following to bob: "
 puts to_bob_public
 
-#s.send(to_bob_public+"\000",0)
 s.puts to_bob_public
 puts "sent..."
 
@@ -73,13 +72,13 @@ iv = cipher.random_iv
 puts "iv is #{iv}"
 
 #encrypt data
-encrypted = (cipher.update(data) << cipher.final)
+encrypted = Base64.encode64(cipher.update(data) << cipher.final)
 
 #encrypt key and iv using bob's public key
 
 #bob_key.public_encrypt should be on next 2
-encrypted_cipher_key = Base64.encode64((key))
-encrypted_cipher_iv = Base64.encode64((iv))
+encrypted_cipher_key = Base64.encode64(key)
+encrypted_cipher_iv = Base64.encode64(iv)
 puts "encrypted cipher key is #{encrypted_cipher_key}"
 puts "encrypted cipher iv is #{encrypted_cipher_iv}"
 
@@ -92,7 +91,6 @@ full_package = JSON.generate({
 puts "full final package sent to bob is #{full_package}"
 
 #send full_package to bob
-#s.send(full_package+"\000", 0)
 s.puts full_package
 
 s.close
