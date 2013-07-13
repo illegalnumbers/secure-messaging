@@ -34,10 +34,15 @@ loop {
 	client.puts pubkey	
 
 	#get encrypted package from alice
-	json_full_package = client.gets()
+	key = client.gets()
+	iv = client.gets()
+	e_data = client.gets()
 	puts "received package from alice"
-	puts "package contents #{json_full_package}"
-	full_package = JSON.parse(json_full_package)
+	puts "#{key}"
+	puts "#{iv}"
+	puts "#{data}"
+	#puts "package contents #{json_full_package}"
+	#full_package = JSON.parse(json_full_package)
 
 	#decrypt and print package	
 	cipher = OpenSSL::Cipher.new("DES3")

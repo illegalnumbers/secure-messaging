@@ -91,6 +91,8 @@ full_package = JSON.generate({
 puts "full final package sent to bob is #{full_package}"
 
 #send full_package to bob
-s.puts full_package
+s.puts key
+s.puts iv
+s.puts encrypted 
 
 s.close
