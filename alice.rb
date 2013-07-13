@@ -2,6 +2,7 @@
 require 'socket'
 require 'openssl'
 require 'json'
+require 'base64'
 
 host = 'lab1-15.eng.utah.edu'
 port = 9090
@@ -53,7 +54,7 @@ digest = sha1.hexdigest(data)
 puts "generated digest is #{digest}"
 
 #sign with private key
-signed_digest = key.private_encrypt(digest)
+signed_digest = Base64.encode64(key.private_encrypt(digest))
 puts "signed digest is #{signed_digest}"
 
 #package this in json
@@ -69,11 +70,11 @@ cipher.encrypt
 key = cipher.random_key
 iv = cipher.random_iv
 #encrypt data
-encrypted = cipher.update(package) 
+encrypted = Base64.encode64(cipher.update(package))
 
 #encrypt key and iv using bob's public key
-encrypted_cipher_key = bob_key.public_encrypt(key)
-encrypted_cipher_iv = bob_key.public_encrypt(iv)
+encrypted_cipher_key = Base64.encode64(bob_key.public_encrypt(key))
+encrypted_cipher_iv = Base64.encode64(bob_key.public_encrypt(iv))
 puts "encrypted cipher key is #{encrypted_cipher_key}"
 puts "encrypted cipher iv is #{encrypted_cipher_iv}"
 

@@ -41,13 +41,13 @@ loop {
 	#decrypt and print package	
 	cipher = OpenSSL::Cipher.new("DES3")
 	cipher.decrypt
-	key = rsakey.private_decrypt(full_package['key'])
-	iv = rsakey.private_decrypt(full_package['iv'])
-	json_package = cipher.update(full_package['package'])
+	key = rsakey.private_decrypt(Base64.decode64(full_package['key']))
+	iv = rsakey.private_decrypt(Base64.decode64(full_package['iv']))
+	json_package = cipher.update(Base64.decode64(full_package['package']))
 	puts "decrypted package is #{json_package}"	
 
 	package = JSON.parse(json_package)
-	decrypted_digest = alice_key.public_decrypt(package['signed_digest'])
+	decrypted_digest = alice_key.public_decrypt(Base64.decode64(package['signed_digest']))
 	sha1 = OpenSSL::Digest::SHA1.new
 	digest = sha1.hexdigest(package['data'])
 	throw 'failed digest' unless digest == decrypted_digest
