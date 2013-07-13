@@ -11,14 +11,14 @@ s = TCPSocket.open(host, port)
 puts "tcp socket opened..."
 
 #generate alice's key pair
-key = OpenSSL::PKey::RSA.new 2048
+rsakey = OpenSSL::PKey::RSA.new 2048
 puts "key generated...."
 
 puts "public key = #{key.public_key}"
 puts "private key = #{key}"
 
 to_bob_public = JSON.generate({
-	key: key.public_key.to_pem
+	key: rsakey.public_key.to_pem
 	})
 
 puts "sending the following to bob: "
@@ -54,7 +54,7 @@ digest = sha1.hexdigest(data)
 puts "generated digest is #{digest}"
 
 #sign with private key
-signed_digest = Base64.encode64(key.private_encrypt(digest))
+signed_digest = Base64.encode64(rsakey.private_encrypt(digest))
 puts "signed digest is #{signed_digest}"
 
 #package this in json
