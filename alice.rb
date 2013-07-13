@@ -72,7 +72,7 @@ iv = cipher.random_iv
 puts "iv is #{iv}"
 
 #encrypt data
-encrypted = Base64.encode64(cipher.update(data) << cipher.final)
+encrypted = cipher.update(data) + cipher.final
 
 #encrypt key and iv using bob's public key
 
@@ -82,13 +82,13 @@ encrypted_cipher_iv = Base64.encode64(iv)
 puts "encrypted cipher key is #{encrypted_cipher_key}"
 puts "encrypted cipher iv is #{encrypted_cipher_iv}"
 
-full_package = JSON.generate({
-		key: encrypted_cipher_key,
-		iv: encrypted_cipher_iv,
-		package: encrypted		
-	})
+#full_package = JSON.generate({
+#		key: encrypted_cipher_key,
+#		iv: encrypted_cipher_iv,
+#		package: encrypted		
+#	})
 
-puts "full final package sent to bob is #{full_package}"
+#puts "full final package sent to bob is #{full_package}"
 
 #send full_package to bob
 s.puts key

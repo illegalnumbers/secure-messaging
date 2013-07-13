@@ -16,8 +16,8 @@ sha1 = OpenSSL::Digest::SHA1.new
 digest = sha1.hexdigest(rsakey.public_key.to_pem)
 
 pubkey = JSON.generate({
-	key: rsakey.public_key.to_pem,
-	digest: digest
+#	key: rsakey.public_key.to_pem,
+#	digest: digest
 	})
 
 loop {
@@ -40,7 +40,7 @@ loop {
 	puts "received package from alice"
 	puts "#{key}"
 	puts "#{iv}"
-	puts "#{data}"
+	puts "#{e_data}"
 	#puts "package contents #{json_full_package}"
 	#full_package = JSON.parse(json_full_package)
 
