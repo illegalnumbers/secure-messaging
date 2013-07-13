@@ -73,7 +73,7 @@ iv = cipher.random_iv
 puts "iv is #{iv}"
 
 #encrypt data
-encrypted = Base64.encode64(cipher.update(package) + cipher.final)
+encrypted = Base64.encode64(cipher.update(package) << cipher.final)
 
 #encrypt key and iv using bob's public key
 encrypted_cipher_key = Base64.encode64(bob_key.public_encrypt(key))
