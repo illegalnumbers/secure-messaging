@@ -42,9 +42,10 @@ loop {
 	#decrypt and print package	
 	cipher = OpenSSL::Cipher.new("DES3")
 	cipher.decrypt
-	key = rsakey.private_decrypt(Base64.decode64(full_package['key']))
+	#key and iv should rsakey.private_decrypt
+	key = (Base64.decode64(full_package['key']))
 	puts "decrypted key is #{key}"
-	iv = rsakey.private_decrypt(Base64.decode64(full_package['iv']))
+	iv = (Base64.decode64(full_package['iv']))
 	puts "decrypted iv is #{iv}"
 	json_package = cipher.update(Base64.decode64(full_package['package'])) << cipher.final
 	puts "decrypted package is #{json_package}"	

@@ -14,8 +14,8 @@ puts "tcp socket opened..."
 rsakey = OpenSSL::PKey::RSA.new 2048
 puts "key generated...."
 
-puts "public key = #{key.public_key}"
-puts "private key = #{key}"
+puts "public key = #{rsakey.public_key}"
+puts "private key = #{rsakey}"
 
 to_bob_public = JSON.generate({
 	key: rsakey.public_key.to_pem
@@ -76,8 +76,10 @@ puts "iv is #{iv}"
 encrypted = Base64.encode64(cipher.update(package) << cipher.final)
 
 #encrypt key and iv using bob's public key
-encrypted_cipher_key = Base64.encode64(bob_key.public_encrypt(key))
-encrypted_cipher_iv = Base64.encode64(bob_key.public_encrypt(iv))
+
+#bob_key.public_encrypt should be on next 2
+encrypted_cipher_key = Base64.encode64((key))
+encrypted_cipher_iv = Base64.encode64((iv))
 puts "encrypted cipher key is #{encrypted_cipher_key}"
 puts "encrypted cipher iv is #{encrypted_cipher_iv}"
 
