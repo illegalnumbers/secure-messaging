@@ -12,7 +12,7 @@ rsakey = OpenSSL::PKey::RSA.new 2048
 
 #hash the key using sha1
 sha1 = OpenSSL::Digest::SHA1.new
-digest = sha1.digest(rsakey.public_key.to_pem)
+digest = sha1.hexdigest(rsakey.public_key.to_pem)
 
 pubkey = JSON.generate({
 	key: rsakey.public_key.to_pem,
@@ -44,7 +44,7 @@ loop {
 	package = JSON.parse(json_package)
 	decrypted_digest = alice_key.public_decrypt(package['signed_digest'])
 	sha1 = OpenSSL::Digest::SHA1.new
-	digest = sha1.digest(package['data'])
+	digest = sha1.hexdigest(package['data'])
 	throw 'failed digest' unless digest == decrypted_digest
 
 	puts package['data']

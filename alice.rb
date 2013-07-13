@@ -30,14 +30,14 @@ bob_digest = bob['digest']
 
 #verify public key
 sha1 = OpenSSL::Digest::SHA1.new
-t_digest = sha1.digest(bob['key'])
+t_digest = sha1.hexdigest(bob['key'])
 throw "not verified" unless t_digest == bob_digest
 
 data = File.read('document') #data is original message
 
 #hash the document using sha1
 sha1 = OpenSSL::Digest::SHA1.new
-digest = sha1.digest(data)
+digest = sha1.hexdigest(data)
 
 #sign with private key
 signed_digest = key.private_encrypt(digest)
