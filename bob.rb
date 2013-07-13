@@ -23,15 +23,19 @@ loop {
 	client = s.accept
 	#get public key from alice
 	incoming = client.gets()
+	puts "received alice's key"
 	alice = JSON.parse(incoming)
 	alice_key = OpenSSL::PKey::RSA.new alice['key']
+	puts "alice's key is #{alice_key}"
 
 	#send public key to alice
-	puts pubkey
+	puts "sending "+pubkey
 	client.puts pubkey	
 
 	#get encrypted package from alice
 	json_full_package = client.gets()
+	puts "received package from alice"
+	puts "package contents #{json_full_package}"
 	full_package = JSON.parse(json_full_package)
 
 	#decrypt and print package	
@@ -40,13 +44,17 @@ loop {
 	key = rsakey.private_decrypt(full_package['key'])
 	iv = rsakey.private_decrypt(full_package['iv'])
 	json_package = cipher.update(full_package['package'])
+	puts "decrypted package is #{json_package}"	
 
 	package = JSON.parse(json_package)
 	decrypted_digest = alice_key.public_decrypt(package['signed_digest'])
 	sha1 = OpenSSL::Digest::SHA1.new
 	digest = sha1.hexdigest(package['data'])
 	throw 'failed digest' unless digest == decrypted_digest
-
-	puts package['data']
+	puts "digest verified!"
+	puts "digest is #{digest}"	
+	
+	puts "final data verified and decrypted."	
+	puts "data is "+package['data']
 	client.close
 }

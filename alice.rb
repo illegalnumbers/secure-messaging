@@ -7,46 +7,61 @@ host = 'lab1-15.eng.utah.edu'
 port = 9090
 
 s = TCPSocket.open(host, port)
-
-pubkey_q = false
-
-keyF = File.new("public_key.pem", 'w')
+puts "tcp socket opened..."
 
 #generate alice's key pair
 key = OpenSSL::PKey::RSA.new 2048
+puts "key generated...."
+
+puts "public key = #{key.public_key}"
+puts "private key = #{key}"
 
 to_bob_public = JSON.generate({
 	key: key.public_key.to_pem
 	})
-s.send(to_bob_public)
+
+puts "sending the following to bob: "
+puts to_bob_public
+
+#s.send(to_bob_public+"\000",0)
+s.puts to_bob_public
+puts "sent..."
 
 #get public key certificate from bob
-while line = s.gets
-	puts line.chop
-	bob = JSON.parse(line)
-end
+line = s.gets
+puts "got #{line} from bob"
+bob = JSON.parse(line)
+
 bob_key = OpenSSL::PKey::RSA.new bob['key']
 bob_digest = bob['digest']
+
+puts "bob's public key is #{bob_key}"
+puts "bob's digest is #{bob_digest}"
 
 #verify public key
 sha1 = OpenSSL::Digest::SHA1.new
 t_digest = sha1.hexdigest(bob['key'])
 throw "not verified" unless t_digest == bob_digest
+puts "generated digest: #{t_digest}"
+puts "digest verified!"
 
 data = File.read('document') #data is original message
 
 #hash the document using sha1
 sha1 = OpenSSL::Digest::SHA1.new
 digest = sha1.hexdigest(data)
+puts "generated digest is #{digest}"
 
 #sign with private key
 signed_digest = key.private_encrypt(digest)
+puts "signed digest is #{signed_digest}"
 
 #package this in json
 package = JSON.generate({
 		signed_digest: signed_digest,
 		data: data		
 	})
+puts "package to bob is #{package}"
 
 #make cipher for encryption
 cipher = OpenSSL::Cipher.new("DES3")
@@ -59,6 +74,8 @@ encrypted = cipher.update(package)
 #encrypt key and iv using bob's public key
 encrypted_cipher_key = bob_key.public_encrypt(key)
 encrypted_cipher_iv = bob_key.public_encrypt(iv)
+puts "encrypted cipher key is #{encrypted_cipher_key}"
+puts "encrypted cipher iv is #{encrypted_cipher_iv}"
 
 full_package = JSON.generate({
 		key: encrypted_cipher_key,
@@ -66,7 +83,10 @@ full_package = JSON.generate({
 		package: encrypted		
 	})
 
+puts "full final package sent to bob is #{full_package}"
+
 #send full_package to bob
-s.send(full_package)
+#s.send(full_package+"\000", 0)
+s.puts full_package
 
 s.close
