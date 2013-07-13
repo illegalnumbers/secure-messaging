@@ -2,6 +2,7 @@
 require 'socket'
 require 'openssl'
 require 'json'
+require 'base64'
 
 port = 9090
 
@@ -42,7 +43,9 @@ loop {
 	cipher = OpenSSL::Cipher.new("DES3")
 	cipher.decrypt
 	key = rsakey.private_decrypt(Base64.decode64(full_package['key']))
+	puts "decrypted key is #{key}"
 	iv = rsakey.private_decrypt(Base64.decode64(full_package['iv']))
+	puts "decrypted iv is #{iv}"
 	json_package = cipher.update(Base64.decode64(full_package['package']))
 	puts "decrypted package is #{json_package}"	
 
