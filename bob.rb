@@ -47,7 +47,7 @@ loop {
 	puts "decrypted key is #{key}"
 	iv = (Base64.decode64(full_package['iv']))
 	puts "decrypted iv is #{iv}"
-	json_package = cipher.update(Base64.decode64(full_package['package'])) << cipher.final
+	json_package = cipher.update((full_package['package'])) << cipher.final
 	puts "decrypted package is #{json_package}"	
 
 	package = JSON.parse(json_package)
