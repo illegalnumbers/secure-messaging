@@ -47,15 +47,18 @@ loop {
 	#decrypt and print package	
 	cipher = OpenSSL::Cipher.new("DES3")
 	cipher.decrypt
+	cipher.key = key
+	cipher.iv = iv
 	#key and iv should rsakey.private_decrypt
-	key = (Base64.decode64(full_package['key']))
+	#key = (Base64.decode64(full_package['key']))
 	puts "decrypted key is #{key}"
-	iv = (Base64.decode64(full_package['iv']))
+	#iv = (Base64.decode64(full_package['iv']))
 	puts "decrypted iv is #{iv}"
-	json_package = cipher.update((full_package['package'])) << cipher.final
+	#json_package = cipher.update(full_package['package'])) << cipher.final
+	json_package = cipher.update(e_data)
 	puts "decrypted package is #{json_package}"	
 
-	package = JSON.parse(json_package)
+	#package = JSON.parse(json_package)
 	decrypted_digest = alice_key.public_decrypt(Base64.decode64(package['signed_digest']))
 	sha1 = OpenSSL::Digest::SHA1.new
 	digest = sha1.hexdigest(package['data'])
